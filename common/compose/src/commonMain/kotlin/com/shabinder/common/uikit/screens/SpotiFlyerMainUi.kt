@@ -56,6 +56,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults.textFieldColors
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.rounded.CardGiftcard
@@ -134,7 +135,14 @@ fun SpotiFlyerMainContent(component: SpotiFlyerMain) {
                     openDonationDialog()
                 }
             )
+
             HomeCategory.History -> HistoryColumn(
+                model.records.sortedByDescending { it.id },
+                component::loadImage,
+                component::onLinkSearch
+            )
+
+            HomeCategory.Download -> DownloadColumn(
                 model.records.sortedByDescending { it.id },
                 component::loadImage,
                 component::onLinkSearch
@@ -172,6 +180,7 @@ fun HomeTabBar(
                         text = when (category) {
                             HomeCategory.About -> Strings.about()
                             HomeCategory.History -> Strings.history()
+                            HomeCategory.Download -> Strings.downloading()
                         },
                         style = MaterialTheme.typography.body2
                     )
@@ -180,6 +189,7 @@ fun HomeTabBar(
                     when (category) {
                         HomeCategory.About -> Icon(Icons.Outlined.Info, Strings.infoTab())
                         HomeCategory.History -> Icon(Icons.Outlined.History, Strings.historyTab())
+                        HomeCategory.Download -> Icon(Icons.Outlined.Download, Strings.downloading())
                     }
                 }
             )
@@ -247,7 +257,11 @@ fun SearchPanel(
                 )
             )
         ) {
-            Text(text = Strings.search(), style = SpotiFlyerTypography.h6, modifier = Modifier.padding(4.dp))
+            Text(
+                text = Strings.search(),
+                style = SpotiFlyerTypography.h6,
+                modifier = Modifier.padding(4.dp)
+            )
         }
     }
 }
@@ -275,13 +289,21 @@ fun AboutColumn(
                         color = colorAccent
                     )
                     Spacer(modifier = Modifier.padding(top = 12.dp))
-                    Row(horizontalArrangement = Arrangement.Center, modifier = modifier.fillMaxWidth()) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = modifier.fillMaxWidth()
+                    ) {
                         Icon(
                             SpotifyLogo(),
                             "${Strings.open()} Spotify",
                             tint = Color.Unspecified,
                             modifier = Modifier.clip(SpotiFlyerShapes.small).clickable(
-                                onClick = { Actions.instance.openPlatform("com.spotify.music", "https://open.spotify.com") }
+                                onClick = {
+                                    Actions.instance.openPlatform(
+                                        "com.spotify.music",
+                                        "https://open.spotify.com"
+                                    )
+                                }
                             )
                         )
                         Spacer(modifier = modifier.padding(start = 16.dp))
@@ -290,7 +312,12 @@ fun AboutColumn(
                             "${Strings.open()} Gaana",
                             tint = Color.Unspecified,
                             modifier = Modifier.clip(SpotiFlyerShapes.small).clickable(
-                                onClick = { Actions.instance.openPlatform("com.gaana", "https://www.gaana.com") }
+                                onClick = {
+                                    Actions.instance.openPlatform(
+                                        "com.gaana",
+                                        "https://www.gaana.com"
+                                    )
+                                }
                             )
                         )
                         Spacer(modifier = modifier.padding(start = 16.dp))
@@ -299,7 +326,12 @@ fun AboutColumn(
                             "${Strings.open()} Jio Saavn",
                             tint = Color.Unspecified,
                             modifier = Modifier.clickable(
-                                onClick = { Actions.instance.openPlatform("com.jio.media.jiobeats", "https://www.jiosaavn.com/") }
+                                onClick = {
+                                    Actions.instance.openPlatform(
+                                        "com.jio.media.jiobeats",
+                                        "https://www.jiosaavn.com/"
+                                    )
+                                }
                             )
                         )
                         Spacer(modifier = modifier.padding(start = 16.dp))
@@ -308,7 +340,12 @@ fun AboutColumn(
                             "${Strings.open()} Youtube",
                             tint = Color.Unspecified,
                             modifier = Modifier.clip(SpotiFlyerShapes.small).clickable(
-                                onClick = { Actions.instance.openPlatform("com.google.android.youtube", "https://m.youtube.com") }
+                                onClick = {
+                                    Actions.instance.openPlatform(
+                                        "com.google.android.youtube",
+                                        "https://m.youtube.com"
+                                    )
+                                }
                             )
                         )
                         Spacer(modifier = modifier.padding(start = 12.dp))
@@ -317,18 +354,31 @@ fun AboutColumn(
                             "${Strings.open()} Youtube Music",
                             tint = Color.Unspecified,
                             modifier = Modifier.clip(SpotiFlyerShapes.small).clickable(
-                                onClick = { Actions.instance.openPlatform("com.google.android.apps.youtube.music", "https://music.youtube.com/") }
+                                onClick = {
+                                    Actions.instance.openPlatform(
+                                        "com.google.android.apps.youtube.music",
+                                        "https://music.youtube.com/"
+                                    )
+                                }
                             )
                         )
                     }
                     Spacer(modifier = Modifier.padding(top = 8.dp))
-                    Row(horizontalArrangement = Arrangement.Center, modifier = modifier.fillMaxWidth()) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = modifier.fillMaxWidth()
+                    ) {
                         Icon(
                             SoundCloudLogo(),
                             "${Strings.open()} Sound Cloud",
                             tint = Color.Unspecified,
                             modifier = Modifier.clip(SpotiFlyerShapes.medium).clickable(
-                                onClick = { Actions.instance.openPlatform("com.soundcloud.android", "https://soundcloud.com/") }
+                                onClick = {
+                                    Actions.instance.openPlatform(
+                                        "com.soundcloud.android",
+                                        "https://soundcloud.com/"
+                                    )
+                                }
                             )
                         )
                     }
@@ -349,11 +399,21 @@ fun AboutColumn(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth().clickable(
-                            onClick = { Actions.instance.openPlatform("", "https://github.com/Shabinder/SpotiFlyer") }
+                            onClick = {
+                                Actions.instance.openPlatform(
+                                    "",
+                                    "https://github.com/Shabinder/SpotiFlyer"
+                                )
+                            }
                         )
                             .padding(vertical = 6.dp)
                     ) {
-                        Icon(GithubLogo(), Strings.openProjectRepo(), Modifier.size(32.dp), tint = Color(0xFFCCCCCC))
+                        Icon(
+                            GithubLogo(),
+                            Strings.openProjectRepo(),
+                            Modifier.size(32.dp),
+                            tint = Color(0xFFCCCCCC)
+                        )
                         Spacer(modifier = Modifier.padding(start = 16.dp))
                         Column {
                             Text(
@@ -368,10 +428,19 @@ fun AboutColumn(
                     }
                     Row(
                         modifier = modifier.fillMaxWidth().padding(vertical = 6.dp)
-                            .clickable(onClick = { Actions.instance.openPlatform("", "https://github.com/Shabinder/SpotiFlyer/blob/main/CONTRIBUTING.md") }),
+                            .clickable(onClick = {
+                                Actions.instance.openPlatform(
+                                    "",
+                                    "https://github.com/Shabinder/SpotiFlyer/blob/main/CONTRIBUTING.md"
+                                )
+                            }),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(Icons.Rounded.Flag, Strings.help() + Strings.translate(), Modifier.size(32.dp))
+                        Icon(
+                            Icons.Rounded.Flag,
+                            Strings.help() + Strings.translate(),
+                            Modifier.size(32.dp)
+                        )
                         Spacer(modifier = Modifier.padding(start = 16.dp))
                         Column {
                             Text(
@@ -390,7 +459,11 @@ fun AboutColumn(
                             .clickable(onClick = openDonationDialog),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(Icons.Rounded.CardGiftcard, Strings.supportDeveloper(), Modifier.size(32.dp))
+                        Icon(
+                            Icons.Rounded.CardGiftcard,
+                            Strings.supportDeveloper(),
+                            Modifier.size(32.dp)
+                        )
                         Spacer(modifier = Modifier.padding(start = 16.dp))
                         Column {
                             Text(
@@ -413,7 +486,11 @@ fun AboutColumn(
                             ),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(Icons.Rounded.Share, Strings.share() + Strings.title() + "App", Modifier.size(32.dp))
+                        Icon(
+                            Icons.Rounded.Share,
+                            Strings.share() + Strings.title() + "App",
+                            Modifier.size(32.dp)
+                        )
                         Spacer(modifier = Modifier.padding(start = 16.dp))
                         Column {
                             Text(
@@ -435,7 +512,11 @@ fun AboutColumn(
                             ),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(Icons.Rounded.Insights, Strings.analytics() + Strings.status(), Modifier.size(32.dp))
+                        Icon(
+                            Icons.Rounded.Insights,
+                            Strings.analytics() + Strings.status(),
+                            Modifier.size(32.dp)
+                        )
                         Spacer(modifier = Modifier.padding(start = 16.dp))
                         Column(
                             Modifier.weight(1f)
@@ -474,12 +555,22 @@ fun HistoryColumn(
 ) {
     Crossfade(list) {
         if (it.isEmpty()) {
-            Column(Modifier.padding(8.dp).fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                Modifier.padding(8.dp).fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Icon(
-                    Icons.Outlined.Info, Strings.noHistoryAvailable(), modifier = Modifier.size(80.dp),
+                    Icons.Outlined.Info,
+                    Strings.noHistoryAvailable(),
+                    modifier = Modifier.size(80.dp),
                     colorOffWhite
                 )
-                Text(Strings.noHistoryAvailable(), style = SpotiFlyerTypography.h4.copy(fontWeight = FontWeight.Light), textAlign = TextAlign.Center)
+                Text(
+                    Strings.noHistoryAvailable(),
+                    style = SpotiFlyerTypography.h4.copy(fontWeight = FontWeight.Light),
+                    textAlign = TextAlign.Center
+                )
             }
         } else {
             Box {
@@ -516,50 +607,126 @@ fun HistoryColumn(
 }
 
 @Composable
-fun DownloadRecordItem(
-    item: DownloadRecord,
+fun DownloadColumn(
+    list: List<DownloadRecord>,
     loadImage: suspend (String) -> Picture,
     onItemClicked: (String) -> Unit
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().padding(end = 8.dp)) {
-        ImageLoad(
-            item.coverUrl,
-            { loadImage(item.coverUrl) },
-            Strings.albumArt(),
-            modifier = Modifier.height(70.dp).width(70.dp).clip(SpotiFlyerShapes.medium)
-        )
-        Column(modifier = Modifier.padding(horizontal = 8.dp).height(60.dp).weight(1f), verticalArrangement = Arrangement.SpaceEvenly) {
-            Text(item.name, maxLines = 1, overflow = TextOverflow.Ellipsis, style = SpotiFlyerTypography.h6, color = colorAccent)
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom,
-                modifier = Modifier.padding(horizontal = 8.dp).fillMaxSize()
+    Crossfade(list) {
+        if (it.isEmpty()) {
+            Column(
+                Modifier.padding(8.dp).fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(item.type, fontSize = 13.sp, color = colorOffWhite)
-                Text("${Strings.tracks()}: ${item.totalFiles}", fontSize = 13.sp, color = colorOffWhite)
+                Icon(
+                    Icons.Outlined.Info,
+                    Strings.noHistoryAvailable(),
+                    modifier = Modifier.size(80.dp),
+                    colorOffWhite
+                )
+                Text(
+                    Strings.noHistoryAvailable(),
+                    style = SpotiFlyerTypography.h4.copy(fontWeight = FontWeight.Light),
+                    textAlign = TextAlign.Center
+                )
+            }
+        } else {
+            Box {
+
+                val listState = rememberLazyListState()
+                val itemList = it.distinctBy { record -> record.coverUrl }
+
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    content = {
+                        items(itemList) { record ->
+                            DownloadRecordItem(
+                                item = record,
+                                loadImage,
+                                onItemClicked
+                            )
+                        }
+                    },
+                    state = listState,
+                    modifier = Modifier.padding(top = 8.dp).fillMaxSize()
+                )
+
+                /*VerticalScrollbar(
+                    modifier = Modifier.padding(end = 2.dp).align(Alignment.CenterEnd).fillMaxHeight(),
+                    adapter = rememberScrollbarAdapter(
+                        scrollState = listState,
+                        itemCount = itemList.size,
+                        averageItemSize = 70.dp
+                    )
+                )*/
             }
         }
-        Image(
-            ShareImage(),
-            Strings.reSearch(),
-            modifier = Modifier.clickable(
-                onClick = {
-                    // if(!isOnline(ctx)) showDialog("Check Your Internet Connection") else
-                    onItemClicked(item.link)
-                }
-            )
-        )
     }
 }
 
-@Composable
-fun HomeCategoryTabIndicator(
-    modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colors.onSurface
-) {
-    Spacer(
-        modifier.padding(horizontal = 24.dp)
-            .height(3.dp)
-            .background(color, RoundedCornerShape(topStartPercent = 100, topEndPercent = 100))
-    )
-}
+    @Composable
+    fun DownloadRecordItem(
+        item: DownloadRecord,
+        loadImage: suspend (String) -> Picture,
+        onItemClicked: (String) -> Unit
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth().padding(end = 8.dp)
+        ) {
+            ImageLoad(
+                item.coverUrl,
+                { loadImage(item.coverUrl) },
+                Strings.albumArt(),
+                modifier = Modifier.height(70.dp).width(70.dp).clip(SpotiFlyerShapes.medium)
+            )
+            Column(
+                modifier = Modifier.padding(horizontal = 8.dp).height(60.dp).weight(1f),
+                verticalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Text(
+                    item.name,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = SpotiFlyerTypography.h6,
+                    color = colorAccent
+                )
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom,
+                    modifier = Modifier.padding(horizontal = 8.dp).fillMaxSize()
+                ) {
+                    Text(item.type, fontSize = 13.sp, color = colorOffWhite)
+                    Text(
+                        "${Strings.tracks()}: ${item.totalFiles}",
+                        fontSize = 13.sp,
+                        color = colorOffWhite
+                    )
+                }
+            }
+            Image(
+                ShareImage(),
+                Strings.reSearch(),
+                modifier = Modifier.clickable(
+                    onClick = {
+                        // if(!isOnline(ctx)) showDialog("Check Your Internet Connection") else
+                        onItemClicked(item.link)
+                    }
+                )
+            )
+        }
+    }
+
+    @Composable
+    fun HomeCategoryTabIndicator(
+        modifier: Modifier = Modifier,
+        color: Color = MaterialTheme.colors.onSurface
+    ) {
+        Spacer(
+            modifier.padding(horizontal = 24.dp)
+                .height(3.dp)
+                .background(color, RoundedCornerShape(topStartPercent = 100, topEndPercent = 100))
+        )
+    }
+
